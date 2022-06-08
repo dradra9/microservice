@@ -60,7 +60,7 @@ public class MyfirstmicroserviceApplication {
 	// Create New Actor
 	@PostMapping("/addActor")
 	public @ResponseBody
-	Actor createEmployee(@RequestParam String first_name, String last_name) {
+	Actor createActor(@RequestParam String first_name, String last_name) {
 
 		Actor addActor = new Actor(first_name,last_name);
 		return actorRepository.save(addActor);
