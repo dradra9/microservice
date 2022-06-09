@@ -38,6 +38,7 @@ public class MyfirstmicroserviceApplication {
 		return actorRepository.findAll();
 	}
 
+	/*
 
 	@GetMapping("/All_Actors1")
 	public @ResponseBody
@@ -48,7 +49,7 @@ public class MyfirstmicroserviceApplication {
 
 		return actor;
 	}
-
+		*/
 
 
 	//There is an alternate way to do it with repose RequestBody
@@ -59,8 +60,8 @@ public class MyfirstmicroserviceApplication {
 
 	//Get one Actor
 	@GetMapping("/getActor")
-	public ResponseEntity<Actor>getActor(@RequestParam Integer id){
-		Actor actor = actorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Actor does not exist with id: " + id));
+	public ResponseEntity<Actor>getActor(@RequestParam Integer actor_id){
+		Actor actor = actorRepository.findById(actor_id).orElseThrow(() -> new ResourceNotFoundException("Actor does not exist with id: " + actor_id));
 		return ResponseEntity.ok(actor);
 	}
 
@@ -76,9 +77,9 @@ public class MyfirstmicroserviceApplication {
 
 	// Delete Actor
 	@DeleteMapping("/deleteActor")
-	public ResponseEntity<Actor>  deleteActor (@RequestParam Integer id){
-		Actor deleteActor = actorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Actor does not exist with id: " + id));
-		actorRepository.deleteById(id);
+	public ResponseEntity<Actor>  deleteActor (@RequestParam Integer actor_id){
+		Actor deleteActor = actorRepository.findById(actor_id).orElseThrow(() -> new ResourceNotFoundException("Actor does not exist with id: " + actor_id));
+		actorRepository.delete(deleteActor);
 		return ResponseEntity.ok(deleteActor);
 	}
 

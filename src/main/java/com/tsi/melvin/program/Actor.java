@@ -1,13 +1,9 @@
 package com.tsi.melvin.program;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.springframework.data.annotation.Id;
 
 import javax.annotation.processing.Generated;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="actor")
@@ -16,8 +12,6 @@ public class Actor {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-
-    // Attributes
     int actor_id;
     String first_name;
     String last_name;

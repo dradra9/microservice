@@ -24,6 +24,7 @@ public class MockitoTest {
 
         myfirstmicroserviceApplication = new MyfirstmicroserviceApplication(actorRepository);
 
+
     }
 
     @Test
@@ -65,10 +66,11 @@ public class MockitoTest {
 
         //System.out.println(actualActorId);
         //System.out.println(expectedId);
-        System.out.println(testActor);
-        System.out.println(actorArgumentCaptor.getAllValues().get(0));
+       // System.out.println(testActor);
+        //System.out.println(actorArgumentCaptor.getAllValues().get(0));
     }
 
+    @Test
     public void addActor(){
 
         Actor testActor = new Actor ("first_name", "last_name");
@@ -80,17 +82,35 @@ public class MockitoTest {
 
     }
 
+
+    @Test
     public void deleteActor(){
 
         Actor testActor = new Actor ("first_name", "last_name");
         myfirstmicroserviceApplication.createActor(testActor.first_name,testActor.last_name);
 
-        Actor testActor2 = new Actor ("first_name2", "last_name2");
-        myfirstmicroserviceApplication.createActor(testActor.first_name,testActor.last_name);
+        testActor.setActor_id(1);
+        ResponseEntity<Actor> expected = myfirstmicroserviceApplication.deleteActor(1);
 
-        
+        ArgumentCaptor<Actor> actorArgumentCaptor = ArgumentCaptor.forClass(Actor.class);
+        verify(actorRepository).save(actorArgumentCaptor.capture());
+        actorArgumentCaptor.getAllValues().get(0).setActor_id(1);
+        verify(actorRepository).delete(actorArgumentCaptor.capture());
+
+        Actor actual = actorArgumentCaptor.getValue();
+
+        System.out.println(actorArgumentCaptor.getAllValues().get(0).getActor_id());
 
 
+        //Assertions.assertEquals(,actual,"Delete actor method did not work properly");
+
+
+
+
+    }
+
+    @Test
+    public void updateActor(){
 
     }
 
