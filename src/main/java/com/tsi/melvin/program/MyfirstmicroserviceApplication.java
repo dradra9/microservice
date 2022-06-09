@@ -38,16 +38,24 @@ public class MyfirstmicroserviceApplication {
 		return actorRepository.findAll();
 	}
 
-/*
-	@GetMapping("/All_Actors/")
-	public @ResponseBody
-	Iterable<Actor>getById(@RequestParam Integer id){
 
+	@GetMapping("/All_Actors1")
+	public @ResponseBody
+	Optional<Actor> getById(@RequestParam Integer id){
+
+		String done = "done";
 		Optional<Actor> actor = this.actorRepository.findById(id);
 
 		return actor;
 	}
-	*/
+
+
+
+	//There is an alternate way to do it with repose RequestBody
+
+
+	//@GetMapping("/getAActor")
+	//public @ResponseBody
 
 	//Get one Actor
 	@GetMapping("/getActor")

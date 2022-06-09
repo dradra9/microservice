@@ -37,23 +37,58 @@ public class MockitoTest {
 
     public void getActor(){
        Actor testActor = new Actor ("first_name", "last_name");
-
+       //testActor.setActor_id(0);
 
        myfirstmicroserviceApplication.createActor(testActor.first_name,testActor.last_name);
 
-        ArgumentCaptor<Actor> actorArgumentCaptor = ArgumentCaptor.forClass(Actor.class); // mock table
+        ArgumentCaptor<Actor> actorArgumentCaptor = ArgumentCaptor.forClass(Actor.class); // mock data class
         verify(actorRepository).save(actorArgumentCaptor.capture());
-        actorArgumentCaptor.getValue();
-       String test =  actorArgumentCaptor.getAllValues().get(0).getFirst_name();
-       Actor actualActor = actorArgumentCaptor.getAllValues().get(0);
+        String test =  actorArgumentCaptor.getAllValues().get(0).getFirst_name();
+        Integer actualActorId = actorArgumentCaptor.getAllValues().get(0).getActor_id();
+        String actualActorFirstName = actorArgumentCaptor.getAllValues().get(0).getFirst_name();
+        String actualActorLastName = actorArgumentCaptor.getAllValues().get(0).getLast_name();
 
-       //ResponseEntity<Actor> actualTest = myfirstmicroserviceApplication.getActor(0);
+
+        Integer expectedId = testActor.getActor_id();
+        String expectedFirstName = testActor.getFirst_name();
+        String expectedLastName = testActor.getLast_name();
+
+        //when(testActor.getActor_id()).thenReturn("first");
+
+
+        //ResponseEntity<Actor> actualTest = myfirstmicroserviceApplication.getActor(0);
        //System.out.println(testActor.getActor_id());
-       Assertions.assertEquals(testActor,actualActor,"doesn't work");
+        Assertions.assertEquals(expectedId,actualActorId,"Actor Id not matching");
+        Assertions.assertEquals(expectedFirstName, actualActorFirstName,"Actor first name not matching");
+        Assertions.assertEquals(expectedLastName, actualActorLastName, "Actor last name not matching");
 
+
+        //System.out.println(actualActorId);
+        //System.out.println(expectedId);
+        System.out.println(testActor);
+        System.out.println(actorArgumentCaptor.getAllValues().get(0));
     }
 
     public void addActor(){
+
+        Actor testActor = new Actor ("first_name", "last_name");
+        myfirstmicroserviceApplication.createActor(testActor.first_name,testActor.last_name);
+
+
+        ArgumentCaptor<Actor> actorArgumentCaptor = ArgumentCaptor.forClass(Actor.class); // mock data class
+        verify(actorRepository).save(actorArgumentCaptor.capture());
+
+    }
+
+    public void deleteActor(){
+
+        Actor testActor = new Actor ("first_name", "last_name");
+        myfirstmicroserviceApplication.createActor(testActor.first_name,testActor.last_name);
+
+        Actor testActor2 = new Actor ("first_name2", "last_name2");
+        myfirstmicroserviceApplication.createActor(testActor.first_name,testActor.last_name);
+
+        
 
 
 
