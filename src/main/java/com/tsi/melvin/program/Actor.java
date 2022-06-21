@@ -12,7 +12,7 @@ public class Actor {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    int actor_id;
+    Integer actor_id;
     String first_name;
     String last_name;
 
@@ -36,7 +36,7 @@ public class Actor {
         return first_name;
     }
 
-    public int getActor_id() {
+    public Integer getActor_id() {
         return actor_id;
     }
 
@@ -48,7 +48,7 @@ public class Actor {
         this.first_name = first_name;
     }
 
-    public void setActor_id(int actor_id) {
+    public void setActor_id(Integer actor_id) {
         this.actor_id = actor_id;
     }
 
