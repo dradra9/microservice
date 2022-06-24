@@ -10,10 +10,24 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Date;
+import java.util.Optional;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -37,6 +51,14 @@ public class MockitoTest {
 
     @Mock
     private FilmRepository filmRepository;
+    @Mock
+    private CategoryRepository categoryRepository;
+
+    @Mock
+    private LanguageRepository languageRepository;
+
+
+
 
 
 
@@ -45,16 +67,15 @@ public class MockitoTest {
     void setUp(){
 
 
-        myfirstmicroserviceApplication = new MyfirstmicroserviceApplication(actorRepository,accountRepository,filmRepository);
+        myfirstmicroserviceApplication = new MyfirstmicroserviceApplication(actorRepository,accountRepository,filmRepository, categoryRepository, languageRepository);
 
 
 
 
     }
 
-
+    @Test
     public void getAllActors(){
-        MockitoAnnotations.initMocks(this);
         myfirstmicroserviceApplication.getAllActors();
         verify(actorRepository).findAll();
     }
@@ -117,66 +138,7 @@ public class MockitoTest {
     }
 
 
-    /*
 
-    @Test
-    public void deleteActor(){
-
-        Actor testActor = new Actor ("first_name", "last_name");
-        testActor.setActor_id(1);
-
-        System.out.println(testActor.getActor_id());
-
-        myfirstmicroserviceApplication.createActor(testActor.first_name,testActor.last_name);
-        actorRepository.save(testActor);
-        System.out.println(actorRepository.count());
-
-        when(actorRepository.save(Mockito.any(Actor.class))).thenReturn(testActor);
-
-
-        //ArgumentCaptor<Actor> actorArgumentCaptor = ArgumentCaptor.forClass(Actor.class); // mock data class
-        //verify(this.actorRepository).save(actorArgumentCaptor.capture());
-
-
-
-
-        System.out.println(actorRepository.existsById(0));
-        System.out.println(actorRepository.existsById(1));
-        System.out.println(actorRepository.existsById(2));
-
-
-
-       // ResponseEntity<Actor> entityActor;
-        //when(actorRepository.findById(1).get()).thenReturn(testActor);
-
-        actorRepository.deleteById(testActor.getActor_id());
-
-        verify(actorRepository,times(1)).delete(testActor);
-
-        Assertions.assertNull(actorRepository.findById(1).get());
-
-
-
-
-//
-//        ArgumentCaptor<Actor> actorArgumentCaptor = ArgumentCaptor.forClass(Actor.class);
-//        verify(actorRepository).save(actorArgumentCaptor.capture());
-//        actorArgumentCaptor.getAllValues().get(0).setActor_id(1);
-//        verify(actorRepository).delete(actorArgumentCaptor.capture());
-//
-//        Actor actual = actorArgumentCaptor.getValue();
-//
-//        System.out.println(actorArgumentCaptor.getAllValues().get(0).getActor_id());
-
-
-        //Assertions.assertEquals(,actual,"Delete actor method did not work properly");
-
-
-
-
-    }
-
-    */
 
     @Test
     public void updateActor(){
@@ -212,6 +174,147 @@ public class MockitoTest {
         verify(actorRepository).delete(actor);
 
     }
+
+    @Test
+    public void deleteFilm(){
+        Film film = new Film();
+        when(filmRepository.findById(1)).thenReturn(Optional.of(film));
+        myfirstmicroserviceApplication.deleteFilm(1);
+        verify(filmRepository).delete(film);
+
+    }
+
+
+    @Test
+    public void updateFilm(){
+
+        Film film = new Film();
+        film.setFilm_id(1);
+        when(filmRepository.findById(1)).thenReturn(Optional.of(film));
+
+        myfirstmicroserviceApplication.updateFilm(1,"melvin", "joy",2,2,"w",null);
+        ArgumentCaptor<Film> filmArgumentCaptor = ArgumentCaptor.forClass(Film.class);
+        verify(filmRepository).save(filmArgumentCaptor.capture());
+
+        Film actualFilm = filmArgumentCaptor.getValue();
+
+
+        Assertions.assertEquals(1, actualFilm.getFilm_id(), "First name is not the same");
+        Assertions.assertEquals("melvin",actualFilm.getTitle(), "First name is not the same");
+        Assertions.assertEquals("joy",actualFilm.getDescription(), "Last name is not the same");
+
+
+
+
+    }
+
+    @Test//get method for all categories
+    void getAllCategory(){
+        myfirstmicroserviceApplication.getAllFilms();
+        verify(filmRepository).findAll();
+    }
+    @Test
+    void getACategory(){
+        Category testCategory = new Category(1, "testCategory");
+        testCategory.setCategoryId(1);
+        when(categoryRepository.findById(1)).thenReturn(Optional.of(testCategory));
+        Category Actual = myfirstmicroserviceApplication.getACategory(testCategory.getCategoryId()).getBody();
+        Category Expected = testCategory;
+        Assertions.assertEquals(Expected,Actual,"Could not find Category with ID: ");
+    }
+    @Test
+    void addCategory(){
+        Category testCategory = new Category(1, "testCategory");
+        testCategory.setCategoryId(1);
+        Category Actual = myfirstmicroserviceApplication.addCategory(testCategory).getBody();
+        ArgumentCaptor<Category> actorArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+        verify(categoryRepository).save(actorArgumentCaptor.capture());
+        Category Expected = actorArgumentCaptor.getValue();
+        Assertions.assertEquals(Expected,Actual,"Category was not added.");
+    }
+    @Test
+    void updateCategory(){
+        Category testCategory = new Category(1, "testCategory");
+        testCategory.setCategoryId(1);
+        Category testCategoryUpdated = new Category(1, "testCategoryUpdated");
+        testCategoryUpdated.setCategoryId(1);
+        when(categoryRepository.findById(testCategory.getCategoryId())).thenReturn(Optional.of(testCategoryUpdated));
+        Category Actual = myfirstmicroserviceApplication.updateCategory(testCategoryUpdated).getBody();
+        ArgumentCaptor<Category> actorArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+        verify(categoryRepository).save(actorArgumentCaptor.capture());
+        Category Expected = actorArgumentCaptor.getValue();
+        Assertions.assertEquals(Expected,Actual,"Category was not updated.");
+    }
+    @Test
+    void deleteCategory(){
+        Category testCategory = new Category(1, "testCategory");
+        testCategory.setCategoryId(1);
+        Category testCategoryDelete = new Category(1, "testCategory");
+        testCategory.setCategoryId(1);
+        when(categoryRepository.findById(testCategoryDelete.getCategoryId())).thenReturn(Optional.of(testCategoryDelete));
+        doNothing().when(categoryRepository).deleteById(1);
+        Category Actual = myfirstmicroserviceApplication.deleteCategory(testCategoryDelete).getBody();
+        categoryRepository.deleteById(testCategoryDelete.getCategoryId());
+        Category Expected = testCategoryDelete;
+        Assertions.assertEquals(Expected,Actual,"Category was not deleted.");
+    }
+
+
+    @Test//get method for all languages
+    void getAllLanguage(){
+        myfirstmicroserviceApplication.getAllLanguages();
+        verify(languageRepository).findAll();
+    }
+    @Test//get method for a Language
+    void getALanguage(){
+        Language testLanguage = new Language("testLanguage");
+        testLanguage.setLanguageId(1);
+        when(languageRepository.findById(1)).thenReturn(Optional.of(testLanguage));
+        Language Actual = myfirstmicroserviceApplication.getLanguageName(testLanguage.getLanguageId()).getBody();
+        Language Expected = testLanguage;
+        Assertions.assertEquals(Expected,Actual,"Could not find Language with ID: ");
+    }
+    @Test//post method for a Language
+    void addLanguage(){
+        Language testLanguage = new Language("testLanguage");
+        testLanguage.setLanguageId(1);
+        Language Actual = myfirstmicroserviceApplication.addLanguage(testLanguage).getBody();
+        ArgumentCaptor<Language> actorArgumentCaptor = ArgumentCaptor.forClass(Language.class);
+        verify(languageRepository).save(actorArgumentCaptor.capture());
+        Language Expected = actorArgumentCaptor.getValue();
+        Assertions.assertEquals(Expected,Actual,"Language was not added.");
+    }
+    @Test//put  method for a Language
+    void updateLanguage(){
+        Language testLanguage = new Language("testLanguage");
+        testLanguage.setLanguageId(1);
+        Language testLanguageUpdated = new Language("testLanguageUpdated");
+        testLanguageUpdated.setLanguageId(1);
+        when(languageRepository.findById(testLanguage.getLanguageId())).thenReturn(Optional.of(testLanguageUpdated));
+        Language Actual = myfirstmicroserviceApplication.updateLanguage(testLanguageUpdated).getBody();
+        ArgumentCaptor<Language> actorArgumentCaptor = ArgumentCaptor.forClass(Language.class);
+        verify(languageRepository).save(actorArgumentCaptor.capture());
+        Language Expected = actorArgumentCaptor.getValue();
+        Assertions.assertEquals(Expected,Actual,"Language was not updated.");
+    }
+    @Test//delete method for a Language
+    void deleteLanguage(){
+        Language testLanguage = new Language("testLanguage");
+        testLanguage.setLanguageId(1);
+        Language testCategoryDelete = new Language("testLanguage");
+        testCategoryDelete.setLanguageId(1);
+        when(languageRepository.findById(testCategoryDelete.getLanguageId())).thenReturn(Optional.of(testCategoryDelete));
+        doNothing().when(languageRepository).deleteById(1);
+        Language Actual = myfirstmicroserviceApplication.deleteLanguage(testCategoryDelete).getBody();
+        languageRepository.deleteById(testCategoryDelete.getLanguageId());
+        Language Expected = testCategoryDelete;
+        Assertions.assertEquals(Expected,Actual,"Language was not deleted.");
+    }
+
+
+
+
+
 
 
 /*

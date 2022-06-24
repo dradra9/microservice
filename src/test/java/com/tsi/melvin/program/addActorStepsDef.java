@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import static org.mockito.Mockito.verify;
@@ -33,6 +34,13 @@ public class addActorStepsDef {
     @Mock
     private FilmRepository filmRepository;
 
+    @Mock
+    private CategoryRepository categoryRepository;
+
+    @Mock
+    private LanguageRepository languageRepository;
+
+
 
 
 
@@ -41,7 +49,7 @@ public class addActorStepsDef {
         // Write code here that turns the phrase above into concrete actions
         testActor = new Actor ("firstName", "lastName");
         actorRepository = mock(ActorRepository.class);
-        myfirstmicroserviceApplication = new MyfirstmicroserviceApplication(actorRepository,accountRepository,filmRepository);
+        myfirstmicroserviceApplication = new MyfirstmicroserviceApplication(actorRepository,accountRepository,filmRepository, categoryRepository, languageRepository);
 
     }
     @When(": I put the data into the database")
