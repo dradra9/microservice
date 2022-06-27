@@ -83,7 +83,6 @@ public class MockitoTest {
 
 
     @Test
-
     public void getActor(){
        Actor testActor = new Actor ("first_name", "last_name");
        //testActor.setActor_id(0);
@@ -208,7 +207,109 @@ public class MockitoTest {
 
     }
 
-    @Test//get method for all categories
+    @Test
+    public void getAllFilms(){
+        myfirstmicroserviceApplication.getAllFilms();
+        verify(filmRepository).findAll();
+    }
+
+
+    @Test
+    public void getFilms(){
+        Film testFilm = new Film ("title", "description",2022,20,"url", null);
+        //testActor.setActor_id(0);
+
+        myfirstmicroserviceApplication.createFilm(testFilm.title, testFilm.description,testFilm.release_year, testFilm.length,testFilm.url, testFilm.film_image);
+
+        ArgumentCaptor<Film> filmArgumentCaptor = ArgumentCaptor.forClass(Film.class); // mock data class
+        verify(filmRepository).save(filmArgumentCaptor.capture());
+        Integer actualActorId = filmArgumentCaptor.getAllValues().get(0).getFilm_id();
+        String actualActorFirstName = filmArgumentCaptor.getAllValues().get(0).getTitle();
+        String actualActorLastName = filmArgumentCaptor.getAllValues().get(0).getDescription();
+
+        Integer expectedId = testFilm.getFilm_id();
+        String expectedFirstName = testFilm.getTitle();
+        String expectedLastName = testFilm.getDescription();
+
+        Assertions.assertEquals(expectedId,actualActorId,"Actor Id not matching");
+        Assertions.assertEquals(expectedFirstName, actualActorFirstName,"Actor first name not matching");
+        Assertions.assertEquals(expectedLastName, actualActorLastName, "Actor last name not matching");
+
+
+    }
+
+
+    @Test
+    public void addFilm(){
+
+        Film testFilm = new Film ("title", "description",2022,20,"url", null);
+        myfirstmicroserviceApplication.createFilm(testFilm.title, testFilm.description,testFilm.release_year, testFilm.length,testFilm.url, testFilm.film_image);
+
+
+        // see what data is being saved.
+        ArgumentCaptor<Film> filmArgumentCaptor = ArgumentCaptor.forClass(Film.class); // mock data class
+        verify(filmRepository).save(filmArgumentCaptor.capture());
+
+        Film film = filmArgumentCaptor.getValue();
+
+        Integer actualActorId = filmArgumentCaptor.getAllValues().get(0).getFilm_id();
+        String actualActorFirstName = filmArgumentCaptor.getAllValues().get(0).getTitle();
+        String actualActorLastName = filmArgumentCaptor.getAllValues().get(0).getDescription();
+
+        Integer expectedId = testFilm.getFilm_id();
+        String expectedFirstName = testFilm.getTitle();
+        String expectedLastName = testFilm.getDescription();
+
+        Assertions.assertEquals(expectedId,actualActorId,"Actor Id not matching");
+        Assertions.assertEquals(expectedFirstName, actualActorFirstName,"Actor first name not matching");
+        Assertions.assertEquals(expectedLastName, actualActorLastName, "Actor last name not matching");
+
+
+
+
+
+    }
+
+
+    @Test
+    public void getAllAccounts(){
+      myfirstmicroserviceApplication.getAllAccounts();
+      verify(accountRepository).findAll();
+    }
+
+
+    @Test
+    public void getAccount(){
+        Account testAccount = new Account ("username","password","name",1);
+        //testActor.setActor_id(0);
+
+        myfirstmicroserviceApplication.createAccount(testAccount.user_name,testAccount.password,testAccount.name,testAccount.level);
+
+        ArgumentCaptor<Account> accountArgumentCaptor = ArgumentCaptor.forClass(Account.class); // mock data class
+        verify(accountRepository).save(accountArgumentCaptor.capture());
+        Integer actualAccountId = accountArgumentCaptor.getAllValues().get(0).getAccountId();
+        String actualAccountUsername = accountArgumentCaptor.getAllValues().get(0).getUsername();
+        String actualAccountPassword = accountArgumentCaptor.getAllValues().get(0).getPassword();
+
+        Integer expectedId = testAccount.getAccountId();
+        String expectedUsername = testAccount.getUsername();
+        String expectedPassword = testAccount.getPassword();
+
+        Assertions.assertEquals(expectedId,actualAccountId,"Actor Id not matching");
+        Assertions.assertEquals(expectedUsername, actualAccountUsername,"Actor first name not matching");
+        Assertions.assertEquals(expectedPassword, actualAccountPassword, "Actor last name not matching");
+
+
+    }
+
+
+
+
+
+
+
+
+    @Test
     void getAllCategory(){
         myfirstmicroserviceApplication.getAllFilms();
         verify(filmRepository).findAll();
@@ -260,12 +361,12 @@ public class MockitoTest {
     }
 
 
-    @Test//get method for all languages
+    @Test
     void getAllLanguage(){
         myfirstmicroserviceApplication.getAllLanguages();
         verify(languageRepository).findAll();
     }
-    @Test//get method for a Language
+    @Test
     void getALanguage(){
         Language testLanguage = new Language("testLanguage");
         testLanguage.setLanguageId(1);
@@ -274,7 +375,7 @@ public class MockitoTest {
         Language Expected = testLanguage;
         Assertions.assertEquals(Expected,Actual,"Could not find Language with ID: ");
     }
-    @Test//post method for a Language
+    @Test
     void addLanguage(){
         Language testLanguage = new Language("testLanguage");
         testLanguage.setLanguageId(1);
@@ -284,7 +385,7 @@ public class MockitoTest {
         Language Expected = actorArgumentCaptor.getValue();
         Assertions.assertEquals(Expected,Actual,"Language was not added.");
     }
-    @Test//put  method for a Language
+    @Test
     void updateLanguage(){
         Language testLanguage = new Language("testLanguage");
         testLanguage.setLanguageId(1);
@@ -297,7 +398,7 @@ public class MockitoTest {
         Language Expected = actorArgumentCaptor.getValue();
         Assertions.assertEquals(Expected,Actual,"Language was not updated.");
     }
-    @Test//delete method for a Language
+    @Test
     void deleteLanguage(){
         Language testLanguage = new Language("testLanguage");
         testLanguage.setLanguageId(1);

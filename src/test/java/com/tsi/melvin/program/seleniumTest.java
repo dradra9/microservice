@@ -89,20 +89,6 @@ public class seleniumTest {
         String after = driver.findElement(By.id("success")).getText();
 
         Assertions.assertNotEquals(before, after);
-        //driver.findElement(By.id("navId")).click();
-
-          // Thread.sleep(200);
-        //String  beforePending = driver.findElement(By.id("pending")).getText();
-        //WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(300));
-        //wait.until(ExpectedConditions.invisibilityOfElementWithText(By.id("pending"), before));
-       // String  afterPending = driver.findElement(By.id("pending")).getText();
-
-       // Assertions.assertNotEquals(beforePending, afterPending);
-
-       // WebElement newActor = driver.findElement (By.xpath ("//*[contains(text(),'testfirst')]"));
-
-        //Assertions.assertEquals("testfirst",newActor.getText());
-        //newActor.click();
 
     }
 
